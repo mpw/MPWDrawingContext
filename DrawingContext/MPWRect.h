@@ -32,7 +32,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
 
 
 #import <Foundation/Foundation.h>
-
+#import "PhoneGeometry.h"
 
 @class MPWPoint;
 

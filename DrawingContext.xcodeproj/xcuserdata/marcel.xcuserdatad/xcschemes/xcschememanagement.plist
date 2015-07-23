@@ -9,9 +9,19 @@
 			<key>orderHint</key>
 			<integer>92</integer>
 		</dict>
+		<key>DrawingContextiOS.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>93</integer>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>1F702DEE1B60F082001CD2B5</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>1FB439B21B5D47E200EF9026</key>
 		<dict>
 			<key>primary</key>

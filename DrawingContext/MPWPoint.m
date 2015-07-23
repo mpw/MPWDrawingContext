@@ -129,7 +129,7 @@ THE POSSIBILITY OF SUCH DAMAGE.
 #else
 -(NSString*)description
 {
-    return [NSString stringWithFormat:@"<%@:%p: x=%g y=%g",[self class],self,point.x,point.y];
+    return [NSString stringWithFormat:@"<%@:%p: x=%g y=%g",[self class],self,_point.x,_point.y];
 }
 #endif
 -asPoint
