@@ -241,7 +241,17 @@ static inline CGColorRef asCGColorRef( id aColor ) {
     return cgColor;
 }
 
--setFillColor:aColor 
+static inline NSArray* asCGColorRefs( NSArray *colors ) {
+    NSMutableArray *newColors=[NSMutableArray new];
+    for ( id aColor in colors ) {
+        NSLog(@"convert: %@",aColor);
+        [newColors addObject:(id)asCGColorRef(aColor)];
+        NSLog(@"newColors = %@",newColors);
+    }
+    return newColors;
+}
+
+-setFillColor:aColor
 {
     CGColorRef c = asCGColorRef(aColor);
     CGContextSetFillColorWithColor( context, c);
@@ -358,12 +368,13 @@ static inline CGColorRef asCGColorRef( id aColor ) {
 
 -(CGGradientRef)_gradientWithColors:(NSArray*)colors offset:(NSArray*)offsets
 {
+    colors = asCGColorRefs(colors);
     CGColorRef firstColor = (CGColorRef)[colors objectAtIndex:0];
+    
     CGColorSpaceRef colorSapce=CGColorGetColorSpace( firstColor);
     CGFloat locations[ [colors count] + 1 ];
-    
-    [self object:offsets toCGFLoats:locations maxCount:[colors count]];
-    CGGradientRef gradient = CGGradientCreateWithColors(colorSapce, (CFArrayRef)colors, locations );
+    [self object:offsets toCGFLoats:locations maxCount:(int)[colors count]];
+    CGGradientRef gradient = CGGradientCreateWithColors(colorSapce, colors, locations );
     [(id)gradient autorelease];
     return gradient;
 }
@@ -590,7 +601,13 @@ static inline CGColorRef asCGColorRef( id aColor ) {
     } else if ( [aPath respondsToSelector:@selector(drawOnContext:)]) {
         [aPath drawOnContext:self];
     } else{
-        CGContextAddPath(context, (CGPathRef)aPath);
+        CGPathRef cgPath=NULL;
+        if ( [aPath respondsToSelector:@selector(CGPath)]) {
+            cgPath=[aPath CGPath];
+        } else {
+            cgPath=(CGPathRef)aPath;
+        }
+        CGContextAddPath(context, cgPath);
     }
 }
 
@@ -878,7 +895,55 @@ void ColoredPatternCallback(void *info, CGContextRef context)
     return [[[[NSImage alloc] initWithCGImage:[self CGImage] size:[self size]] autorelease] CGColor];
 }
 @end
+
+@implementation NSColor(CGColor)
+
+-(CGColorRef)CGColor
+{
+    CGColorRef color=NULL;
+    if ( [self numberOfComponents] == 4) {
+        CGFloat colorComponents[4]={[self redComponent],[self greenComponent],[self blueComponent],[self alphaComponent]};
+        color=CGColorCreate( CGColorSpaceCreateDeviceRGB(), colorComponents);
+    } else {
+        NSLog(@"unknown number of components: %d",[self numberOfComponents]);
+    }
+    return color;
+}
+@end
+
+@implementation NSBezierPath(drawing)
+
+-(void)drawOnContext:(Drawable)context
+{
+    long elementCount=[self elementCount];
+    for (long i=0; i<elementCount; i++) {
+        NSPoint p[10];
+        switch ( [self elementAtIndex:i associatedPoints:p]) {
+            case NSMoveToBezierPathElement:
+                [context moveto:p[0].x :p[0].y];
+                break;
+            case NSLineToBezierPathElement:
+                [context lineto:p[0].x :p[0].y];
+                break;
+                
+            case NSCurveToBezierPathElement:
+                [context curveto:p[0].x :p[0].y :p[1].x :p[1].y :p[2].x :p[2].y];
+                break;
+                
+            case NSClosePathBezierPathElement:
+                [context closepath];
+                break;
+                
+            default:
+                NSLog(@"unknown path component");
+        }
+    }
+}
+
+@end
 #endif
+
+
 
 #if !TARGET_OS_IPHONE
 
