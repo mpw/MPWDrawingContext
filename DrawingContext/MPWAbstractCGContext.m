@@ -203,6 +203,8 @@ POINTARGMETHOD(lineto)
 
 -nsrect:(NSRect)r   { return self; }
 
+-nsrect:(NSRect)r rounded:(NSPoint)rounding   { return self; }
+
 -(NSRect)rectFromObj:obj
 {
     NSRect r=NSZeroRect;
@@ -227,6 +229,17 @@ POINTARGMETHOD(lineto)
             break;
     }
     return r;
+}
+
+-(NSSize)sizeFromObj:anObject
+{
+    return [self rectFromObj:anObject].size;
+}
+
+-(NSPoint)pointFromObj:anObject
+{
+    NSSize s = [self sizeFromObj:anObject];
+    return NSMakePoint(s.width, s.height);
 }
 
 -(void)applyPath:aPath
@@ -257,6 +270,12 @@ PATHMETHOD( eoclip )
 {
     return [self nsrect:[self rectFromObj:obj]];
 }
+
+-rect:(id)obj rounded:rounding
+{
+    return [self nsrect:[self rectFromObj:obj] rounded:[self pointFromObj:rounding]];
+}
+
 
 -ellipseInRect:(NSRect)r  { return self; }
 

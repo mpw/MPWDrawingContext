@@ -8,6 +8,7 @@
 
 #import "MPWCGDrawingContext.h"
 #import "MPWCGPathCreationContext.h"
+#import "AccessorMacros.h"
 
 #if TARGET_OS_IPHONE
 #import <CoreText/CoreText.h>
@@ -20,9 +21,11 @@
 #if TARGET_OS_IPHONE   
 #define IMAGECLASS  UIImage
 #define FONTCLASS   UIFont
+#define PATHCLASS   UIBezierPath
 #else
 #define IMAGECLASS  NSBitmapImageRep
 #define FONTCLASS   NSFont
+#define PATHCLASS   NSBezierPath
 #endif
 
 @protocol DrawingContextRealArray <NSObject>
@@ -300,6 +303,33 @@ static inline NSArray* asCGColorRefs( NSArray *colors ) {
 	CGContextAddRect( context, CGRectMake(r.origin.x, r.origin.y, r.size.width, r.size.height) );
 	return self;
 }
+
+#if TARGET_OS_IPHONE
+-(PATHCLASS*)_rectpath:(NSRect)r rounded:(NSPoint)rounding
+{
+    return [UIBezierPath bezierPathWithRoundedRect:r byRoundingCorners:UIRectCornerAllCorners cornerRadii:CGMakeSize(rounding.x,rounding.y )];
+}
+
+#elif TARGET_OS_MAC
+-(PATHCLASS*)_rectpath:(NSRect)r rounded:(NSPoint)rounding
+{
+    return [PATHCLASS bezierPathWithRoundedRect:r xRadius:rounding.x yRadius:rounding.y];
+}
+#else
+-(PATHCLASS*)_rectpath:(NSRect)r rounded:(NSPoint)rounding
+{
+    return nil;
+}
+#endif
+-nsrect:(NSRect)r rounded:(NSPoint)rounding
+{
+    PATHCLASS *rectpath=[self _rectpath:r rounded:rounding];
+    if ( rectpath) {
+        [self drawImage:rectpath];
+    }
+    return self;
+}
+
 
 -ellipseInRect:(NSRect)r
 {

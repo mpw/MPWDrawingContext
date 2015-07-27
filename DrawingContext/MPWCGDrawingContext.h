@@ -8,7 +8,6 @@
 #import <Foundation/Foundation.h>
 #import "PhoneGeometry.h"
 #import "MPWAbstractCGContext.h"
-#import "AccessorMacros.h"
 
 @class NSMutableParagraphStyle;
 
@@ -19,7 +18,8 @@
     NSMutableParagraphStyle *paragraphStyle;
 }
 
-scalarAccessor_h( CGContextRef, context, setContext )
+@property CGContextRef context;
+
 -initWithCGContext:(CGContextRef)newContext;
 +contextWithCGContext:(CGContextRef)c;
 +currentContext;
