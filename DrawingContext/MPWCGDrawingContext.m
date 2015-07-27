@@ -852,24 +852,39 @@ void ColoredPatternCallback(void *info, CGContextRef context)
 
 @implementation MPWCGBitmapContext
 
--initBitmapContextWithSize:(NSSize)size colorSpace:(CGColorSpaceRef)colorspace
+-initBitmapContextWithSize:(NSSize)size colorSpace:(CGColorSpaceRef)colorspace scale:(float)scaleFactor
 {
 //    CGContextRef c=CGBitmapContextCreate(NULL, size.width, size.height, 8, 0, colorspace,
 //                                         (CGColorSpaceGetNumberOfComponents(colorspace) == 4 ? kCGImageAlphaNone : kCGImageAlphaPremultipliedLast)  | kCGBitmapByteOrderDefault );
-    CGContextRef c=CGBitmapContextCreate(NULL, size.width, size.height, 8, 0, colorspace,kCGImageAlphaNoneSkipFirst  | kCGBitmapByteOrderDefault );
+    CGContextRef c=CGBitmapContextCreate(NULL, size.width * scaleFactor, size.height*scaleFactor, 8, 0, colorspace,kCGImageAlphaNoneSkipFirst  | kCGBitmapByteOrderDefault );
     if ( !c ) {
-        [self dealloc];
+        [self release];
         return nil;
     }
     id new = [self initWithCGContext:c];
+    scale=scaleFactor;
+    if (scale != 1) {
+        [self scale:@(scaleFactor)];
+    }
     CGContextRelease(c);
     return new;
     
 }
 
+-initBitmapContextWithSize:(NSSize)size colorSpace:(CGColorSpaceRef)colorspace
+{
+    return [self initBitmapContextWithSize:size colorSpace:colorspace scale:1];
+}
+
++rgbBitmapContext:(NSSize)size scale:(float)scale
+{
+    return [[[self alloc] initBitmapContextWithSize:size colorSpace:CGColorSpaceCreateDeviceRGB() scale:scale] autorelease];
+}
+
+
 +rgbBitmapContext:(NSSize)size
 {
-    return [[[self alloc] initBitmapContextWithSize:size colorSpace:CGColorSpaceCreateDeviceRGB()] autorelease];
+    return [self rgbBitmapContext:size scale:1];
 }
 
 
@@ -894,7 +909,15 @@ void ColoredPatternCallback(void *info, CGContextRef context)
 -image
 {
     CGImageRef cgImage=[self cgImage];
-    id image= [[[[self imageClass] alloc]  initWithCGImage:cgImage] autorelease];
+#if TARGET_OS_IPHONE
+    id image= [[[UIImage alloc]  initWithCGImage:cgImage scale:scale orientation:UIImageOrientationUp] autorelease];
+#elif TARGET_OS_MAC
+    id image = [[[NSBitmapImageRep alloc] initWithCGImage:cgImage] autorelease];
+    NSSize s=[image size];
+    s.width/=scale;
+    s.height/=scale;
+    [image setSize:s];
+#endif
     CGImageRelease(cgImage);
     return image;
 }

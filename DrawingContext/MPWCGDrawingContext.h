@@ -63,10 +63,15 @@
 @end
 
 @interface MPWCGBitmapContext : MPWCGDrawingContext
+{
+    float scale;
+}
 
+-initBitmapContextWithSize:(NSSize)size colorSpace:(CGColorSpaceRef)colorspace scale:(float)scale;
 -initBitmapContextWithSize:(NSSize)size colorSpace:(CGColorSpaceRef)colorspace;
 
 
++rgbBitmapContext:(NSSize)size scale:(float)scale;
 +rgbBitmapContext:(NSSize)size;
 +cmykBitmapContext:(NSSize)size;
 
