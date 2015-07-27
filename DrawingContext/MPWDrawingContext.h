@@ -119,6 +119,7 @@ typedef void (^DrawingBlock)(id <MPWDrawingContext>);
 -(instancetype)moveto:(id)aPoint;
 -(instancetype)lineto:(id)aPoint;
 -(instancetype)rect:(id)sizeOrRect;
+-(instancetype)rect:(id)sizeOrRect rounded:(id)rounding;
 -(instancetype)ellipse:(id)radiusSizeOrRect;
 
 
