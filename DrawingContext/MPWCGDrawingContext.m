@@ -307,7 +307,8 @@ static inline NSArray* asCGColorRefs( NSArray *colors ) {
 #if TARGET_OS_IPHONE
 -(PATHCLASS*)_rectpath:(NSRect)r rounded:(NSPoint)rounding
 {
-    return [UIBezierPath bezierPathWithRoundedRect:r byRoundingCorners:UIRectCornerAllCorners cornerRadii:CGMakeSize(rounding.x,rounding.y )];
+    CGSize s={rounding.x, rounding.y };
+    return [UIBezierPath bezierPathWithRoundedRect:r byRoundingCorners:UIRectCornerAllCorners cornerRadii: s];
 }
 
 #elif TARGET_OS_MAC
