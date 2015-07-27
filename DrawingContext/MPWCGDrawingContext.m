@@ -247,9 +247,7 @@ static inline CGColorRef asCGColorRef( id aColor ) {
 static inline NSArray* asCGColorRefs( NSArray *colors ) {
     NSMutableArray *newColors=[NSMutableArray new];
     for ( id aColor in colors ) {
-        NSLog(@"convert: %@",aColor);
         [newColors addObject:(id)asCGColorRef(aColor)];
-        NSLog(@"newColors = %@",newColors);
     }
     return newColors;
 }
@@ -308,6 +306,8 @@ static inline NSArray* asCGColorRefs( NSArray *colors ) {
 -(PATHCLASS*)_rectpath:(NSRect)r rounded:(NSPoint)rounding
 {
     CGSize s={rounding.x, rounding.y };
+//    NSLog(@"UIBezierPath rounded rect: x=%g y=%g w=%g h=%g  round x=%g y=%g",
+//          r.origin.x,r.origin.y,r.size.width,r.size.height,s.width,s.height);
     return [UIBezierPath bezierPathWithRoundedRect:r byRoundingCorners:UIRectCornerAllCorners cornerRadii: s];
 }
 
@@ -326,7 +326,7 @@ static inline NSArray* asCGColorRefs( NSArray *colors ) {
 {
     PATHCLASS *rectpath=[self _rectpath:r rounded:rounding];
     if ( rectpath) {
-        [self drawImage:rectpath];
+        [self applyPath:rectpath];
     }
     return self;
 }

@@ -208,10 +208,12 @@ POINTARGMETHOD(lineto)
 -(NSRect)rectFromObj:obj
 {
     NSRect r=NSZeroRect;
-    float coords[4];
+    float coords[4]={0,0,0,0};
     int numCoords=[self object:obj toFloats:coords maxCount:4];
     switch (numCoords) {
         case 1:
+            r.origin.x=0;
+            r.origin.y=0;
             r.size.width=r.size.height=coords[0];
             break;
         case 2:
@@ -226,6 +228,7 @@ POINTARGMETHOD(lineto)
             break;
                     
         default:
+            NSLog(@"number of components %d not handled",numCoords);
             break;
     }
     return r;
@@ -461,7 +464,7 @@ PATHMETHOD( eoclip )
 #endif
 
 @end
-
+#if 0
 #import <MPWFoundation/MPWFoundation.h>
 
 @implementation MPWAbstractCGContext(testing)
@@ -493,3 +496,4 @@ PATHMETHOD( eoclip )
 }
 
 @end
+#endif
