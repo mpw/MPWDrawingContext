@@ -16,11 +16,7 @@
 		1F702DFC1B60F0A1001CD2B5 /* MPWCGDrawingContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB439CF1B5D487D00EF9026 /* MPWCGDrawingContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1F702DFD1B60F0A1001CD2B5 /* MPWCGDrawingContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FB439D01B5D487D00EF9026 /* MPWCGDrawingContext.m */; };
 		1F702DFE1B60F0A1001CD2B5 /* MPWDrawingContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB439D11B5D487D00EF9026 /* MPWDrawingContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1F702DFF1B60F0A1001CD2B5 /* MPWPoint.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB439D21B5D487D00EF9026 /* MPWPoint.h */; };
 		1F702E001B60F0A1001CD2B5 /* AccessorMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB439DF1B5D48E900EF9026 /* AccessorMacros.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1F702E011B60F0A1001CD2B5 /* MPWPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FB439D31B5D487D00EF9026 /* MPWPoint.m */; };
-		1F702E021B60F0A1001CD2B5 /* MPWRect.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB439D41B5D487D00EF9026 /* MPWRect.h */; };
-		1F702E031B60F0A1001CD2B5 /* MPWRect.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FB439D51B5D487D00EF9026 /* MPWRect.m */; };
 		1F702E041B60F0A1001CD2B5 /* DrawingContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB439B61B5D47E200EF9026 /* DrawingContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FB439B71B5D47E200EF9026 /* DrawingContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB439B61B5D47E200EF9026 /* DrawingContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FB439BE1B5D47E200EF9026 /* DrawingContext.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FB439B31B5D47E200EF9026 /* DrawingContext.framework */; };
@@ -30,10 +26,6 @@
 		1FB439D81B5D487D00EF9026 /* MPWCGDrawingContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB439CF1B5D487D00EF9026 /* MPWCGDrawingContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FB439D91B5D487D00EF9026 /* MPWCGDrawingContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FB439D01B5D487D00EF9026 /* MPWCGDrawingContext.m */; };
 		1FB439DA1B5D487D00EF9026 /* MPWDrawingContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB439D11B5D487D00EF9026 /* MPWDrawingContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1FB439DB1B5D487D00EF9026 /* MPWPoint.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB439D21B5D487D00EF9026 /* MPWPoint.h */; };
-		1FB439DC1B5D487D00EF9026 /* MPWPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FB439D31B5D487D00EF9026 /* MPWPoint.m */; };
-		1FB439DD1B5D487D00EF9026 /* MPWRect.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB439D41B5D487D00EF9026 /* MPWRect.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		1FB439DE1B5D487D00EF9026 /* MPWRect.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FB439D51B5D487D00EF9026 /* MPWRect.m */; };
 		1FB439E01B5D48E900EF9026 /* AccessorMacros.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB439DF1B5D48E900EF9026 /* AccessorMacros.h */; };
 		1FB439E21B5D490B00EF9026 /* PhoneGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB439E11B5D490B00EF9026 /* PhoneGeometry.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FB439E51B5D4C6400EF9026 /* MPWCGPathCreationContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB439E31B5D4C6400EF9026 /* MPWCGPathCreationContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -182,8 +174,6 @@
 				1F702E001B60F0A1001CD2B5 /* AccessorMacros.h in Headers */,
 				1F702DFA1B60F0A1001CD2B5 /* MPWAbstractCGContext.h in Headers */,
 				1F702DF71B60F0A1001CD2B5 /* MPWCGPathCreationContext.h in Headers */,
-				1F702DFF1B60F0A1001CD2B5 /* MPWPoint.h in Headers */,
-				1F702E021B60F0A1001CD2B5 /* MPWRect.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -192,13 +182,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				1FB439B71B5D47E200EF9026 /* DrawingContext.h in Headers */,
-				1FB439DD1B5D487D00EF9026 /* MPWRect.h in Headers */,
 				1FB439E51B5D4C6400EF9026 /* MPWCGPathCreationContext.h in Headers */,
 				1FB439D81B5D487D00EF9026 /* MPWCGDrawingContext.h in Headers */,
 				1FB439E21B5D490B00EF9026 /* PhoneGeometry.h in Headers */,
 				1FB439DA1B5D487D00EF9026 /* MPWDrawingContext.h in Headers */,
 				1FB439D61B5D487D00EF9026 /* MPWAbstractCGContext.h in Headers */,
-				1FB439DB1B5D487D00EF9026 /* MPWPoint.h in Headers */,
 				1FB439E01B5D48E900EF9026 /* AccessorMacros.h in Headers */,
 				1FB439E91B5D513800EF9026 /* EGOSTesting.h in Headers */,
 			);
@@ -332,8 +320,6 @@
 				1F702DFB1B60F0A1001CD2B5 /* MPWAbstractCGContext.m in Sources */,
 				1F702DFD1B60F0A1001CD2B5 /* MPWCGDrawingContext.m in Sources */,
 				1F702DF81B60F0A1001CD2B5 /* MPWCGPathCreationContext.m in Sources */,
-				1F702E031B60F0A1001CD2B5 /* MPWRect.m in Sources */,
-				1F702E011B60F0A1001CD2B5 /* MPWPoint.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -341,11 +327,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1FB439DC1B5D487D00EF9026 /* MPWPoint.m in Sources */,
 				1FB439D71B5D487D00EF9026 /* MPWAbstractCGContext.m in Sources */,
 				1FB439EA1B5D513800EF9026 /* EGOSTesting.m in Sources */,
 				1FB439E61B5D4C6400EF9026 /* MPWCGPathCreationContext.m in Sources */,
-				1FB439DE1B5D487D00EF9026 /* MPWRect.m in Sources */,
 				1FB439D91B5D487D00EF9026 /* MPWCGDrawingContext.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -382,7 +366,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MACH_O_TYPE = staticlib;
+				MACH_O_TYPE = mh_dylib;
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_BUNDLE_IDENTIFIER = com.metaobject.DrawingContextiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -406,7 +390,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MACH_O_TYPE = staticlib;
+				MACH_O_TYPE = mh_dylib;
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_BUNDLE_IDENTIFIER = com.metaobject.DrawingContextiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";

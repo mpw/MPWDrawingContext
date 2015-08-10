@@ -6,7 +6,7 @@
 //  Copyright © 2015 metaobject. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
 
 //! Project version number for DrawingContext.
 FOUNDATION_EXPORT double DrawingContextVersionNumber;
