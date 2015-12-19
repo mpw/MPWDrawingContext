@@ -560,7 +560,8 @@ static inline NSArray* asCGColorRefs( NSArray *colors ) {
         NSArray *lines=[self layoutText:someText inPath:aPath];
         for (id line in lines ) {
             CTLineRef lineRef=(CTLineRef)line;
-            CGRectUnion(totalBoundingRect, CTLineGetImageBounds ( lineRef, [self context] ));
+            CGRect lineBounds = CTLineGetImageBounds ( lineRef, [self context] );
+            totalBoundingRect = CGRectUnion(totalBoundingRect, lineBounds );
         }
     }
     return totalBoundingRect;
@@ -1125,11 +1126,18 @@ void ColoredPatternCallback(void *info, CGContextRef context)
     IMAGEEXPECT( resultImage, referenceImage, @"simple-color-creation");
 }
 
++(void)testStringWidth
+{
+    MPWCGBitmapContext *c=[self rgbBitmapContext:NSMakeSize(500,500)];
+    FLOATEXPECTTOLERANCE([c stringwidth:@"Hello World!"],64.38, .1, @"string width of Hello World");
+}
+
 +testSelectors
 {
     return @[
         @"testBasicShapesGetRendered",
-        @"testSimpleColorCreation"
+        @"testSimpleColorCreation",
+        @"testStringWidth",
     ];
 }
 
