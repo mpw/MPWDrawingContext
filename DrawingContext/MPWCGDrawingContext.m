@@ -1129,7 +1129,7 @@ void ColoredPatternCallback(void *info, CGContextRef context)
 +(void)testStringWidth
 {
     MPWCGBitmapContext *c=[self rgbBitmapContext:NSMakeSize(500,500)];
-    FLOATEXPECTTOLERANCE([c stringwidth:@"Hello World!"],64.38, .1, @"string width of Hello World");
+    FLOATEXPECTTOLERANCE([c stringwidth:@"Hello World!"],64.38, .003, @"string width of Hello World");
 }
 
 +testSelectors
