@@ -240,6 +240,21 @@ static inline CGColorRef asCGColorRef( id aColor ) {
     CGColorRef cgColor=(CGColorRef)aColor;
     if ( [aColor respondsToSelector:@selector(CGColor)])  {
         cgColor=[aColor CGColor];
+    } else if ( [aColor respondsToSelector:@selector(rangeOfString:)]) {
+        int r=0,g=0,b=0;
+        char buffer[20];
+        memset(buffer, 0, sizeof buffer);
+//        NSLog(@"string color: '%@'",aColor);
+        if ( [aColor hasPrefix:@"#"]) {
+            aColor=[aColor substringFromIndex:1];
+        }
+        [aColor getCString:buffer maxLength:12 encoding:NSASCIIStringEncoding];
+        sscanf(buffer, "%2x%2x%2x",&r,&g,&b);
+#if TARGET_OS_IPHONE
+        cgColor=[[UIColor colorWithRed:r / 255.0 green:g/255.0  blue: b/255.0 alpha:1.0] CGColor];
+#else
+        cgColor=[[NSColor colorWithRed:r / 255.0 green:g/255.0  blue: b/255.0 alpha:1.0] CGColor];
+#endif
     }
     return cgColor;
 }
@@ -495,12 +510,13 @@ static inline NSArray* asCGColorRefs( NSArray *colors ) {
 
 -layoutText:(NSAttributedString*)someText inPath:aPath
 {
+    NSArray *lines=nil;
     if ( aPath ) {
         someText=[self attributedStringFromString:someText];
         CTFramesetterRef setter = CTFramesetterCreateWithAttributedString( (CFAttributedStringRef) someText );
         CTFrameRef frame=CTFramesetterCreateFrame(setter, CFRangeMake(0, [someText length]), (CGPathRef)aPath, (CFDictionaryRef)@{} );
         if ( frame) {
-            CTFrameDraw(frame, context);
+            lines=CTFrameGetLines( frame );
         } else {
             @throw [NSException exceptionWithName:@"nullpointer" reason:@"frame is null in -layoutText:inPath:" userInfo:nil];
         }
@@ -509,14 +525,52 @@ static inline NSArray* asCGColorRefs( NSArray *colors ) {
     } else {
         @throw [NSException exceptionWithName:@"nullpointer" reason:@"path is null in -layoutText:inPath:" userInfo:nil];
     }
+    return [(id)lines autorelease];
+}
+
+
+-drawText:(NSAttributedString*)someText inPath:aPath
+{
+    @autoreleasepool {
+        NSArray *lines=[self layoutText:someText inPath:aPath];
+        for (id line in lines ) {
+            CTLineRef lineRef=(CTLineRef)line;
+            CTLineDraw(lineRef, [self context]);
+        }
+    }
     return self;
+}
+
+
+-(int)numberOfLinesForText:(NSAttributedString*)someText inPath:aPath
+{
+    int numberOfLines=0;
+    @autoreleasepool {
+        numberOfLines=(int)[[self layoutText:someText inPath:aPath] count];
+    }
+    return numberOfLines;
+}
+
+
+-(NSRect)boundingRectForText:(NSAttributedString*)someText inPath:aPath
+{
+    CGRect totalBoundingRect=CGRectZero;
+    @autoreleasepool {
+        NSArray *lines=[self layoutText:someText inPath:aPath];
+        for (id line in lines ) {
+            CTLineRef lineRef=(CTLineRef)line;
+            CGRectUnion(totalBoundingRect, CTLineGetImageBounds ( lineRef, [self context] ));
+        }
+    }
+    return totalBoundingRect;
 }
 
 
 -(float)stringwidth:(NSAttributedString*)someText
 {
     someText=[self attributedStringFromString:someText];
-    return 0.0;  // FIXME!
+    CGRect r=[self boundingRectForText:someText inPath:[self _rectpath:NSMakeRect(0, 0, 1000*1000*1000, 1000*1000*1000) rounded:NSMakePoint(0, 0)]];
+    return r.size.width;
 }
 
 -showGlyphBuffer:(unsigned short*)glyphs length:(int)len at:(NSPoint)position;
@@ -527,7 +581,7 @@ static inline NSArray* asCGColorRefs( NSArray *colors ) {
 
 -showGlyphs:(id <DrawingContextUshortArray> )glyphs at:(NSPoint)position;
 {
-	[self showGlyphBuffer:[glyphs ushorts] length:[glyphs count] at:position];
+	[self showGlyphBuffer:[glyphs ushorts] length:(int)[glyphs count] at:position];
     return self;
 }
 
@@ -1035,8 +1089,12 @@ void ColoredPatternCallback(void *info, CGContextRef context)
         [c performSelector:ops[i]];
         [c grestore];
         [c translate:0 :40];
-    }    
-    IMAGEEXPECT( [c image], BUNDLEIMAGE(@"context-render-test1"), @"basic-shape-rendering");    
+    }
+    NSBitmapImageRep *referenceImage=BUNDLEIMAGE(@"basic-shape-rendering");
+    NSBitmapImageRep *resultImage=[c image];
+//    NSLog(@"referenceImage: %@",referenceImage);
+//    NSLog(@"resultImage: %@",resultImage);
+    IMAGEEXPECT( resultImage , referenceImage, @"basic-shape-rendering");
 }
 
 
@@ -1059,14 +1117,16 @@ void ColoredPatternCallback(void *info, CGContextRef context)
         [[[c setFillColor:c1] nsrect:NSMakeRect(0, 0, 10, 100)] fill ];
         [c translate:10 :0];
     }
-    IMAGEEXPECT( [c image], BUNDLEIMAGE(@"simple-color-creation"), @"simple-color-creation");
+    NSBitmapImageRep *referenceImage=BUNDLEIMAGE(@"simple-color-creation");
+    NSBitmapImageRep *resultImage=[c image];
+    IMAGEEXPECT( resultImage, referenceImage, @"simple-color-creation");
 }
 
 +testSelectors
 {
     return @[
-//        @"testBasicShapesGetRendered",
-//        @"testSimpleColorCreation"
+        @"testBasicShapesGetRendered",
+        @"testSimpleColorCreation"
     ];
 }
 

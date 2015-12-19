@@ -32,6 +32,8 @@
 		1FB439E61B5D4C6400EF9026 /* MPWCGPathCreationContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FB439E41B5D4C6400EF9026 /* MPWCGPathCreationContext.m */; };
 		1FB439E91B5D513800EF9026 /* EGOSTesting.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB439E71B5D513800EF9026 /* EGOSTesting.h */; };
 		1FB439EA1B5D513800EF9026 /* EGOSTesting.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FB439E81B5D513800EF9026 /* EGOSTesting.m */; };
+		1FC4B63E1C258C23001190C7 /* basic-shape-rendering.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FC4B63D1C258C23001190C7 /* basic-shape-rendering.png */; };
+		1FC4B6401C2593AA001190C7 /* simple-color-creation.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FC4B63F1C2593AA001190C7 /* simple-color-creation.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,6 +71,8 @@
 		1FB439E41B5D4C6400EF9026 /* MPWCGPathCreationContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPWCGPathCreationContext.m; sourceTree = "<group>"; };
 		1FB439E71B5D513800EF9026 /* EGOSTesting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EGOSTesting.h; sourceTree = "<group>"; };
 		1FB439E81B5D513800EF9026 /* EGOSTesting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EGOSTesting.m; sourceTree = "<group>"; };
+		1FC4B63D1C258C23001190C7 /* basic-shape-rendering.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "basic-shape-rendering.png"; sourceTree = "<group>"; };
+		1FC4B63F1C2593AA001190C7 /* simple-color-creation.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "simple-color-creation.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -151,12 +155,22 @@
 		1FB439C11B5D47E200EF9026 /* DrawingContextTests */ = {
 			isa = PBXGroup;
 			children = (
+				1FC4B6341C258ABB001190C7 /* TestResources */,
 				1FB439E71B5D513800EF9026 /* EGOSTesting.h */,
 				1FB439E81B5D513800EF9026 /* EGOSTesting.m */,
 				1FB439C21B5D47E200EF9026 /* DrawingContextTests.m */,
 				1FB439C41B5D47E200EF9026 /* Info.plist */,
 			);
 			path = DrawingContextTests;
+			sourceTree = "<group>";
+		};
+		1FC4B6341C258ABB001190C7 /* TestResources */ = {
+			isa = PBXGroup;
+			children = (
+				1FC4B63F1C2593AA001190C7 /* simple-color-creation.png */,
+				1FC4B63D1C258C23001190C7 /* basic-shape-rendering.png */,
+			);
+			name = TestResources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -300,6 +314,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1FC4B6401C2593AA001190C7 /* simple-color-creation.png in Resources */,
+				1FC4B63E1C258C23001190C7 /* basic-shape-rendering.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -496,8 +512,9 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_VERSION = A;
 				INFOPLIST_FILE = DrawingContext/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				INSTALL_PATH = "@rpath/Frameworks/";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_BUNDLE_IDENTIFIER = com.metaobject.DrawingContext;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -515,8 +532,9 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_VERSION = A;
 				INFOPLIST_FILE = DrawingContext/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				INSTALL_PATH = "@rpath/Frameworks/";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_BUNDLE_IDENTIFIER = com.metaobject.DrawingContext;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;

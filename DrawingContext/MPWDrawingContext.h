@@ -63,7 +63,7 @@
 -(instancetype)showTextString:str at:(NSPoint)position;
 -(instancetype)showGlyphBuffer:(unsigned short*)glyphs length:(int)len at:(NSPoint)position;
 -(instancetype)showGlyphs:glyphArray at:(NSPoint)position;
--(instancetype)layoutText:someText inPath:aPath;
+-(instancetype)drawText:someText inPath:aPath;
 
 
 -(instancetype)drawLinearGradientFrom:(NSPoint)startPoint to:(NSPoint)endPoint colors:(NSArray*)colors offsets:(NSArray*)offsets;
