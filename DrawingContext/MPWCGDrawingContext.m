@@ -516,7 +516,8 @@ static inline NSArray* asCGColorRefs( NSArray *colors ) {
         CTFramesetterRef setter = CTFramesetterCreateWithAttributedString( (CFAttributedStringRef) someText );
         CTFrameRef frame=CTFramesetterCreateFrame(setter, CFRangeMake(0, [someText length]), (CGPathRef)aPath, (CFDictionaryRef)@{} );
         if ( frame) {
-            lines=CTFrameGetLines( frame );
+            lines=[(NSArray *)CTFrameGetLines( frame ) retain];
+            
         } else {
             @throw [NSException exceptionWithName:@"nullpointer" reason:@"frame is null in -layoutText:inPath:" userInfo:nil];
         }
@@ -525,7 +526,7 @@ static inline NSArray* asCGColorRefs( NSArray *colors ) {
     } else {
         @throw [NSException exceptionWithName:@"nullpointer" reason:@"path is null in -layoutText:inPath:" userInfo:nil];
     }
-    return [(id)lines autorelease];
+    return [lines autorelease];
 }
 
 
@@ -569,7 +570,9 @@ static inline NSArray* asCGColorRefs( NSArray *colors ) {
 -(float)stringwidth:(NSAttributedString*)someText
 {
     someText=[self attributedStringFromString:someText];
-    CGRect r=[self boundingRectForText:someText inPath:[self _rectpath:NSMakeRect(0, 0, 1000*1000*1000, 1000*1000*1000) rounded:NSMakePoint(0, 0)]];
+    CGRect r=[self boundingRectForText:someText inPath:[self path:^(id<MPWDrawingContext> c) {
+        [c rect:@(10000000)];
+    }]];
     return r.size.width;
 }
 
@@ -681,11 +684,11 @@ static inline NSArray* asCGColorRefs( NSArray *colors ) {
 
 -(void)applyPath:aPath
 {
-    if ( [aPath respondsToSelector:@selector(value:)]) {
-        [aPath value:self];
-    } else if ( [aPath respondsToSelector:@selector(drawOnContext:)]) {
+    if ( [aPath respondsToSelector:@selector(drawOnContext:)]) {
         [aPath drawOnContext:self];
-    } else{
+    } else if ( [aPath respondsToSelector:@selector(value:)]) {
+        [aPath value:self];
+    } else {
         CGPathRef cgPath=NULL;
         if ( [aPath respondsToSelector:@selector(CGPath)]) {
             cgPath=[aPath CGPath];

@@ -60,8 +60,11 @@ DEALLOC(
     static int initialized=NO;
     if  ( !initialized) {
         Class blockClass=NSClassFromString(@"NSBlock");
-        IMP theImp=imp_implementationWithBlock( ^(id blockSelf, id aContext){ ((DrawingBlock)blockSelf)(aContext); } );
-        class_addMethod(blockClass, @selector(drawOnContext:), theImp, "v@:@");
+        IMP drawOnContextImp=imp_implementationWithBlock( ^(id blockSelf, id aContext){ ((DrawingBlock)blockSelf)(aContext); } );
+        class_addMethod(blockClass, @selector(drawOnContext:), drawOnContextImp, "v@:@");
+        class_addMethod(blockClass, @selector(value:), drawOnContextImp, "v@:@");
+        
+        
         initialized=YES;
     }
 }
