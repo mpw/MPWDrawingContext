@@ -508,61 +508,64 @@ static inline NSArray* asCGColorRefs( NSArray *colors ) {
 }
 
 
--layoutText:(NSAttributedString*)someText inPath:aPath
+-(CTFrameRef)layoutText:someText inPath:aPath
 {
-    NSArray *lines=nil;
+    CTFrameRef frame=nil;
     if ( aPath ) {
         someText=[self attributedStringFromString:someText];
         CTFramesetterRef setter = CTFramesetterCreateWithAttributedString( (CFAttributedStringRef) someText );
-        CTFrameRef frame=CTFramesetterCreateFrame(setter, CFRangeMake(0, [someText length]), (CGPathRef)aPath, (CFDictionaryRef)@{} );
-        if ( frame) {
-            lines=[(NSArray *)CTFrameGetLines( frame ) retain];
-            
-        } else {
+        frame=CTFramesetterCreateFrame(setter, CFRangeMake(0, [someText length]), (CGPathRef)aPath, (CFDictionaryRef)@{} );
+        if ( !frame) {
             @throw [NSException exceptionWithName:@"nullpointer" reason:@"frame is null in -layoutText:inPath:" userInfo:nil];
         }
-        [(id)frame release];
         [(id)setter release];
     } else {
         @throw [NSException exceptionWithName:@"nullpointer" reason:@"path is null in -layoutText:inPath:" userInfo:nil];
     }
-    return [lines autorelease];
+    return [(id)frame autorelease];
 }
 
 
--drawText:(NSAttributedString*)someText inPath:aPath
+-drawText:someText inPath:aPath
 {
     @autoreleasepool {
-        NSArray *lines=[self layoutText:someText inPath:aPath];
-        for (id line in lines ) {
-            CTLineRef lineRef=(CTLineRef)line;
-            CTLineDraw(lineRef, [self context]);
-        }
+        CTFrameRef frame=[self layoutText:someText inPath:aPath];
+        CTFrameDraw(frame, [self context]);
     }
     return self;
 }
 
 
--(int)numberOfLinesForText:(NSAttributedString*)someText inPath:aPath
+-(int)numberOfLinesForText:someText inPath:aPath
 {
     int numberOfLines=0;
     @autoreleasepool {
-        numberOfLines=(int)[[self layoutText:someText inPath:aPath] count];
+        numberOfLines=(int)[(NSArray*)CTFrameGetLines([self layoutText:someText inPath:aPath])  count];
     }
     return numberOfLines;
 }
 
 
--(NSRect)boundingRectForText:(NSAttributedString*)someText inPath:aPath
+-(NSRect)boundingRectForText:someText inPath:aPath
 {
     CGRect totalBoundingRect=CGRectZero;
     @autoreleasepool {
-        NSArray *lines=[self layoutText:someText inPath:aPath];
-        for (id line in lines ) {
-            CTLineRef lineRef=(CTLineRef)line;
+        CTFrameRef frame=[self layoutText:someText inPath:aPath];
+        NSArray *lines=(NSArray*)CTFrameGetLines(frame);
+        int numberOfLines=(int)[lines count];
+        NSPoint origins[numberOfLines];
+        CTFrameGetLineOrigins(frame, CFRangeMake(0,numberOfLines), origins);
+        for (int i=0; i<numberOfLines;i++ ) {
+            CTLineRef lineRef=(CTLineRef)lines[i];
             CGRect lineBounds = CTLineGetImageBounds ( lineRef, [self context] );
+            lineBounds.origin.x += origins[i].x;
+            lineBounds.origin.y += origins[i].y;
             NSLog(@"totalRect before: %@ line-rect : %@",NSStringFromRect(totalBoundingRect) ,NSStringFromRect(lineBounds));
-            totalBoundingRect = CGRectUnion(totalBoundingRect, lineBounds );
+            if ( i > 0) {
+                totalBoundingRect = CGRectUnion(totalBoundingRect, lineBounds );
+            } else {
+                totalBoundingRect = lineBounds;
+            }
         }
     }
     NSLog(@"totalRect: %@",NSStringFromRect(totalBoundingRect));
@@ -570,7 +573,7 @@ static inline NSArray* asCGColorRefs( NSArray *colors ) {
 }
 
 
--(float)stringwidth:(NSAttributedString*)someText
+-(float)stringwidth:someText
 {
     someText=[self attributedStringFromString:someText];
     CGRect r=[self boundingRectForText:someText inPath:[self path:^(id<MPWDrawingContext> c) {
@@ -591,9 +594,9 @@ static inline NSArray* asCGColorRefs( NSArray *colors ) {
     return self;
 }
 
--showGlyphBuffer:(unsigned short *)glyphs length:(int)len atPositions:(NSPoint*)positonArray
+-showGlyphBuffer:(unsigned short *)glyphs length:(int)len atPositions:(NSPoint*)positionArray
 {
-    CGContextShowGlyphsAtPositions(context,(CGGlyph*)glyphs , (CGPoint*)positonArray, len);
+    CGContextShowGlyphsAtPositions(context,(CGGlyph*)glyphs , (CGPoint*)positionArray, len);
     return self;
 }
 
@@ -1019,7 +1022,7 @@ void ColoredPatternCallback(void *info, CGContextRef context)
         CGFloat colorComponents[4]={[self redComponent],[self greenComponent],[self blueComponent],[self alphaComponent]};
         color=CGColorCreate( CGColorSpaceCreateDeviceRGB(), colorComponents);
     } else {
-        NSLog(@"unknown number of components: %d",[self numberOfComponents]);
+        NSLog(@"unknown number of components: %d",(int)[self numberOfComponents]);
     }
     return color;
 }
@@ -1131,7 +1134,30 @@ void ColoredPatternCallback(void *info, CGContextRef context)
 +(void)testStringWidth
 {
     MPWCGBitmapContext *c=[self rgbBitmapContext:NSMakeSize(500,500)];
-    FLOATEXPECTTOLERANCE([c stringwidth:@"Hello World!"],64.38, .003, @"string width of Hello World");
+    FLOATEXPECTTOLERANCE([c stringwidth:@"Hello World!"],63.44, .003, @"string width of Hello World");
+}
+
++(void)testNumberOfLinesForText
+{
+    MPWCGBitmapContext *c=[self rgbBitmapContext:NSMakeSize(500,500)];
+    id path = [c path:^(id<MPWDrawingContext> cp) {
+        [cp nsrect:NSMakeRect(0, 0, 66, 1000)];
+    }];
+    INTEXPECT([c numberOfLinesForText:@"Hello World!" inPath:path], 1, @"fits on line");
+    INTEXPECT([c numberOfLinesForText:@"Hello, cruel World!" inPath:path], 2, @"fits on 2 lines");
+    
+}
+
++(void)testBoundingRectForText
+{
+    MPWCGBitmapContext *c=[self rgbBitmapContext:NSMakeSize(500,500)];
+    id path = [c path:^(id<MPWDrawingContext> cp) {
+        [cp nsrect:NSMakeRect(0, 0, 66, 1000)];
+    }];
+    CGRect textBox1 = [c boundingRectForText:@"Hello World!" inPath:path];
+    RECTEXPECT(textBox1, 1, 988, 63, 9, @"bounding box for Hello World!");
+    CGRect textBox2 = [c boundingRectForText:@"Hello, cruel World!" inPath:path];
+    RECTEXPECT(textBox2, 0, 973, 59, 24, @"bounding box for Hello World!");
 }
 
 +testSelectors
@@ -1140,6 +1166,8 @@ void ColoredPatternCallback(void *info, CGContextRef context)
         @"testBasicShapesGetRendered",
         @"testSimpleColorCreation",
         @"testStringWidth",
+        @"testNumberOfLinesForText",
+        @"testBoundingRectForText",
     ];
 }
 
