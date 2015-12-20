@@ -26,6 +26,8 @@
 
 -(void)resetTextMatrix;
 
+-(NSRect)boundingRectForText:(NSAttributedString*)someText inPath:aPath;
+
 
 #if !TARGET_OS_IPHONE
 -concatNSAffineTransform:(NSAffineTransform*)transform;

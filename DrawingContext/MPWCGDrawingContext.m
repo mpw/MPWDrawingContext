@@ -561,9 +561,11 @@ static inline NSArray* asCGColorRefs( NSArray *colors ) {
         for (id line in lines ) {
             CTLineRef lineRef=(CTLineRef)line;
             CGRect lineBounds = CTLineGetImageBounds ( lineRef, [self context] );
+            NSLog(@"totalRect before: %@ line-rect : %@",NSStringFromRect(totalBoundingRect) ,NSStringFromRect(lineBounds));
             totalBoundingRect = CGRectUnion(totalBoundingRect, lineBounds );
         }
     }
+    NSLog(@"totalRect: %@",NSStringFromRect(totalBoundingRect));
     return totalBoundingRect;
 }
 
