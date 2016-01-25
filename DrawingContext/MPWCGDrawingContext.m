@@ -35,9 +35,10 @@
 
 @end
 
-@interface NSObject(value)
+@interface NSObject(additions)
 
 -value:parameter;
+-(CGPathRef)CGPath;
 
 @end
 
@@ -201,7 +202,7 @@ objectAccessor(NSMutableParagraphStyle, paragraphStyle, setParagraphStyle)
 -setdashpattern:inArray phase:(float)phase
 {
     if ( inArray ) {
-        int arrayLength = [(NSArray*)inArray count];
+        int arrayLength = (int)[(NSArray*)inArray count];
         CGFloat cgArray[ arrayLength ];
         [self object:inArray toCGFLoats:cgArray maxCount:arrayLength];
         CGContextSetLineDash(context, phase, cgArray, arrayLength);
@@ -301,7 +302,7 @@ static inline NSArray* asCGColorRefs( NSArray *colors ) {
 
 -setShadowOffset:(NSSize)offset blur:(float)blur color:aColor
 {
-    CGContextSetShadowWithColor( context, CGSizeMake(offset.width,offset.height),blur, (CGColorRef)aColor);
+    CGContextSetShadowWithColor( context, CGSizeMake(offset.width,offset.height),blur, asCGColorRef( aColor));
     return self;
 }
 
@@ -420,7 +421,7 @@ static inline NSArray* asCGColorRefs( NSArray *colors ) {
     CGColorSpaceRef colorSapce=CGColorGetColorSpace( firstColor);
     CGFloat locations[ [colors count] + 1 ];
     [self object:offsets toCGFLoats:locations maxCount:(int)[colors count]];
-    CGGradientRef gradient = CGGradientCreateWithColors(colorSapce, colors, locations );
+    CGGradientRef gradient = CGGradientCreateWithColors(colorSapce, (CFArrayRef)colors, locations );
     [(id)gradient autorelease];
     return gradient;
 }
@@ -522,7 +523,8 @@ static inline NSArray* asCGColorRefs( NSArray *colors ) {
     } else {
         @throw [NSException exceptionWithName:@"nullpointer" reason:@"path is null in -layoutText:inPath:" userInfo:nil];
     }
-    return [(id)frame autorelease];
+    [(id)frame autorelease];
+    return frame;
 }
 
 
@@ -560,7 +562,6 @@ static inline NSArray* asCGColorRefs( NSArray *colors ) {
             CGRect lineBounds = CTLineGetImageBounds ( lineRef, [self context] );
             lineBounds.origin.x += origins[i].x;
             lineBounds.origin.y += origins[i].y;
-            NSLog(@"totalRect before: %@ line-rect : %@",NSStringFromRect(totalBoundingRect) ,NSStringFromRect(lineBounds));
             if ( i > 0) {
                 totalBoundingRect = CGRectUnion(totalBoundingRect, lineBounds );
             } else {
@@ -568,7 +569,36 @@ static inline NSArray* asCGColorRefs( NSArray *colors ) {
             }
         }
     }
-    NSLog(@"totalRect: %@",NSStringFromRect(totalBoundingRect));
+    return totalBoundingRect;
+}
+
+-(NSRect)lineRectForText:someText inPath:aPath
+{
+    CGRect totalBoundingRect=CGRectZero;
+    CGFloat descent=0;
+    @autoreleasepool {
+        CTFrameRef frame=[self layoutText:someText inPath:aPath];
+        NSArray *lines=(NSArray*)CTFrameGetLines(frame);
+        int numberOfLines=(int)[lines count];
+        NSPoint origins[numberOfLines];
+        CTFrameGetLineOrigins(frame, CFRangeMake(0,numberOfLines), origins);
+        for (int i=0; i<numberOfLines;i++ ) {
+            CTLineRef lineRef=(CTLineRef)lines[i];
+            CGFloat lineWidth,lineLeading,ascent;
+            lineWidth=CTLineGetTypographicBounds(lineRef, &ascent,&descent, &lineLeading);
+            CGRect lineBounds = {origins[i].x, origins[i].y, lineWidth, ascent + descent };
+            NSLog(@"before: total=%@ line=%@ leading=%g ascent=%g descent=%g",NSStringFromRect(totalBoundingRect),NSStringFromRect(lineBounds),lineLeading,ascent,descent);
+            if ( i > 0) {
+                totalBoundingRect = CGRectUnion(totalBoundingRect, lineBounds );
+            } else {
+                totalBoundingRect = lineBounds;
+            }
+        }
+    }
+    totalBoundingRect.origin.y -= descent;
+    totalBoundingRect.size.height += descent;
+    NSLog(@"final: total=%@",NSStringFromRect(totalBoundingRect));
+    
     return totalBoundingRect;
 }
 
@@ -580,18 +610,6 @@ static inline NSArray* asCGColorRefs( NSArray *colors ) {
         [c rect:@(10000000)];
     }]];
     return r.size.width;
-}
-
--showGlyphBuffer:(unsigned short*)glyphs length:(int)len at:(NSPoint)position;
-{
-	CGContextShowGlyphsAtPoint( context, position.x,position.y, glyphs, len);
-    return self;
-}
-
--showGlyphs:(id <DrawingContextUshortArray> )glyphs at:(NSPoint)position;
-{
-	[self showGlyphBuffer:[glyphs ushorts] length:(int)[glyphs count] at:position];
-    return self;
 }
 
 -showGlyphBuffer:(unsigned short *)glyphs length:(int)len atPositions:(NSPoint*)positionArray
@@ -688,7 +706,7 @@ static inline NSArray* asCGColorRefs( NSArray *colors ) {
 }
 #endif
 
--(void)applyPath:aPath
+-(instancetype)applyPath:aPath
 {
     if ( [aPath respondsToSelector:@selector(drawOnContext:)]) {
         [aPath drawOnContext:self];
@@ -703,6 +721,7 @@ static inline NSArray* asCGColorRefs( NSArray *colors ) {
         }
         CGContextAddPath(context, cgPath);
     }
+    return self;
 }
 
 -(void)drawBitmapImage:anImage

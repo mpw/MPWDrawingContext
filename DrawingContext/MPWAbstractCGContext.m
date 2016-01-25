@@ -60,10 +60,11 @@ DEALLOC(
     static int initialized=NO;
     if  ( !initialized) {
         Class blockClass=NSClassFromString(@"NSBlock");
-        IMP drawOnContextImp=imp_implementationWithBlock( ^(id blockSelf, id aContext){ ((DrawingBlock)blockSelf)(aContext); } );
-        class_addMethod(blockClass, @selector(drawOnContext:), drawOnContextImp, "v@:@");
-        class_addMethod(blockClass, @selector(value:), drawOnContextImp, "v@:@");
-        
+        if ( blockClass) {
+            IMP drawOnContextImp=imp_implementationWithBlock( ^(id blockSelf, id aContext){ ((DrawingBlock)blockSelf)(aContext); } );
+            class_addMethod(blockClass, @selector(drawOnContext:), drawOnContextImp, "v@:@");
+            class_addMethod(blockClass, @selector(value:), drawOnContextImp, "v@:@");
+        }
         
         initialized=YES;
     }
@@ -75,7 +76,7 @@ DEALLOC(
     int arrayLength = 1;
     int numConverted=arrayLength;
     if ( [inArray respondsToSelector:@selector(count)]) {
-        arrayLength=[(NSArray*)inArray count];
+        arrayLength=(int)[(NSArray*)inArray count];
         arrayLength=MIN(arrayLength,maxCount);
         numConverted=arrayLength;
         if ( [inArray respondsToSelector:@selector(getReals:length:)] ) {
@@ -144,10 +145,10 @@ DEALLOC(
 {
     NSMutableArray *colorArray=[NSMutableArray array];
     int numColors=0;
-    int numComponents=[arrayOfComponentArrays count];
+    int numComponents=(int)[arrayOfComponentArrays count];
     
     for ( id colorComponentArrayOrNumber in arrayOfComponentArrays ) {
-        int thisCount = [colorComponentArrayOrNumber respondsToSelector:@selector(count)] ? [(NSArray*)colorComponentArrayOrNumber count]:1 ;
+        int thisCount = [colorComponentArrayOrNumber respondsToSelector:@selector(count)] ? (int)[(NSArray*)colorComponentArrayOrNumber count]:1 ;
         numColors=MAX(numColors,thisCount);
     }
     for ( int i=0;i<numColors;i++){
@@ -155,7 +156,7 @@ DEALLOC(
         for (int componentIndex = 0;componentIndex < numComponents; componentIndex++ ) {
             id currentComponent=[arrayOfComponentArrays objectAtIndex:componentIndex];
             if ( [currentComponent respondsToSelector:@selector(count)] ) {
-                int sourceIndex=MIN([(NSArray*)currentComponent count]-1,i);
+                int sourceIndex=MIN((int)[(NSArray*)currentComponent count]-1,i);
                 if ( [currentComponent respondsToSelector:@selector(realAtIndex:)] ) {
                     components[componentIndex]=[currentComponent realAtIndex:sourceIndex];
                 } else {
@@ -248,9 +249,9 @@ POINTARGMETHOD(lineto)
     return NSMakePoint(s.width, s.height);
 }
 
--(void)applyPath:aPath
+-(instancetype)applyPath:aPath
 {
-    // ---
+    return self;
 }
 
 #define PATHMETHOD( methodName ) \

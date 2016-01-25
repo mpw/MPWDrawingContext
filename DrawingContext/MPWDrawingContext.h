@@ -111,7 +111,7 @@ typedef void (^DrawingBlock)(id <MPWDrawingContext>);
 -layerWithSize:(NSSize)size content:(DrawingBlock)drawingCommands;
 -laterWithSize:(NSSize)size content:(DrawingBlock)drawingCommands;
 -page:(NSDictionary*)parameters content:(DrawingBlock)drawingCommands;
--path:(DrawingBlock)pathCreator;
+-path:pathCreator;
 #endif
 
 -(instancetype)translate:(id)aPoint;

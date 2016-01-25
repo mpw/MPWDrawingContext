@@ -26,7 +26,7 @@
 
 -(void)resetTextMatrix;
 
--(NSRect)boundingRectForText:(NSAttributedString*)someText inPath:aPath;
+-(NSRect)boundingRectForText:someText inPath:aPath;
 
 
 #if !TARGET_OS_IPHONE
