@@ -102,6 +102,10 @@
 -(instancetype)setTextPosition:(NSPoint)p;
 -(instancetype)setFont:aFont;
 
+-(NSRect)boundingRectForText:someText inPath:aPath;
+-(NSRect)lineRectForText:someText inPath:aPath;
+
+
 #if NS_BLOCKS_AVAILABLE
 typedef void (^DrawingBlock)(id <MPWDrawingContext>);
 

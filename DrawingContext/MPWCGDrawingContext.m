@@ -569,6 +569,7 @@ static inline NSArray* asCGColorRefs( NSArray *colors ) {
             }
         }
     }
+    NSLog(@"totalBoundingRect: %@ for text: %@",NSStringFromRect(totalBoundingRect),someText);
     return totalBoundingRect;
 }
 
@@ -597,7 +598,7 @@ static inline NSArray* asCGColorRefs( NSArray *colors ) {
     }
     totalBoundingRect.origin.y -= descent;
     totalBoundingRect.size.height += descent;
-    NSLog(@"final: total=%@",NSStringFromRect(totalBoundingRect));
+    NSLog(@"lineRectFor %@ for text: %@",NSStringFromRect(totalBoundingRect),someText);
     
     return totalBoundingRect;
 }
