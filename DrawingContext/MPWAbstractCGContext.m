@@ -19,6 +19,11 @@
 
 @end
 
+@protocol CGImage
+
+-CGImage;
+
+@end
 
 #if NS_BLOCKS_AVAILABLE
 
@@ -63,7 +68,10 @@ DEALLOC(
         if ( blockClass) {
             IMP drawOnContextImp=imp_implementationWithBlock( ^(id blockSelf, id aContext){ ((DrawingBlock)blockSelf)(aContext); } );
             class_addMethod(blockClass, @selector(drawOnContext:), drawOnContextImp, "v@:@");
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
             class_addMethod(blockClass, @selector(value:), drawOnContextImp, "v@:@");
+#pragma clang diagnostic pop
         }
         
         initialized=YES;
@@ -71,10 +79,10 @@ DEALLOC(
 }
 #endif
 
--(int)object:inArray toFloats:(float *)floatArray maxCount:(int)maxCount
+-(long)object:inArray toFloats:(float *)floatArray maxCount:(long)maxCount
 {
-    int arrayLength = 1;
-    int numConverted=arrayLength;
+    long arrayLength = 1;
+    long numConverted=arrayLength;
     if ( [inArray respondsToSelector:@selector(count)]) {
         arrayLength=(int)[(NSArray*)inArray count];
         arrayLength=MIN(arrayLength,maxCount);
@@ -193,7 +201,7 @@ DEALLOC(
 -methodName:aPoint \
 {\
 float coords[2];\
-int numCoords=[self object:aPoint toFloats:coords maxCount:2];\
+long numCoords=[self object:aPoint toFloats:coords maxCount:2];\
 if ( numCoords==1 ) {\
      coords[1]=coords[0];\
 }\
@@ -213,7 +221,7 @@ POINTARGMETHOD(lineto)
 {
     NSRect r=NSZeroRect;
     float coords[4]={0,0,0,0};
-    int numCoords=[self object:obj toFloats:coords maxCount:4];
+    long numCoords=[self object:obj toFloats:coords maxCount:4];
     switch (numCoords) {
         case 1:
             r.origin.x=0;
@@ -232,7 +240,7 @@ POINTARGMETHOD(lineto)
             break;
                     
         default:
-            NSLog(@"number of components %d not handled",numCoords);
+            NSLog(@"number of components %d not handled",(int)numCoords);
             break;
     }
     return r;
@@ -314,8 +322,8 @@ PATHMETHOD( eoclip )
         [self drawBitmapImage:anImage];
     } else if ( [anImage respondsToSelector:@selector(drawOnContext:) ] ) {
         [anImage drawOnContext:self];
-    } else if ( [anImage respondsToSelector:@selector(renderInContext:)]) {
-        [anImage performSelector:@selector(renderInContext:) withObject:[self context]];
+//    } else if ( [anImage respondsToSelector:@selector(renderInContext:)]) {
+//        [anImage performSelector:@selector(renderInContext:) withObject:[self context]];
     }
     return self;
 }
@@ -438,6 +446,7 @@ PATHMETHOD( eoclip )
 
 -(void)flush {}
 -(void)sync  {}
+-setFillColor:aColor {  return self; }
 
 -(void)fillBackgroundWithColor:aColor
 {

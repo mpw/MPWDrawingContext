@@ -14,6 +14,6 @@ FOUNDATION_EXPORT double DrawingContextVersionNumber;
 //! Project version string for DrawingContext.
 FOUNDATION_EXPORT const unsigned char DrawingContextVersionString[];
 
-// In this header, you should import all the public headers of your framework using statements like #import <DrawingContext/PublicHeader.h>
-
+#import <DrawingContext/MPWCGDrawingContext.h>
+#import <DrawingContext/MPWCGPathCreationContext.h>
 

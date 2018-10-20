@@ -20,4 +20,4 @@ EXPECTTRUE( imageCompare( image1, image2, msg, YES) , msg@" look in /tmp " )
 #define IMAGENOTEXPECT( image1, image2, msg ) \
 EXPECTTRUE( imageCompare( image1, image2, msg, NO) , msg@" look in /tmp " )
 
-#define BUNDLEIMAGE(name) [NSBitmapImageRep imageRepWithContentsOfFile:[[NSBundle bundleForClass:self] pathForImageResource:name]] 
+#define BUNDLEIMAGE(name) ((NSBitmapImageRep*)[NSBitmapImageRep imageRepWithContentsOfFile:[[NSBundle bundleForClass:self] pathForImageResource:name]])

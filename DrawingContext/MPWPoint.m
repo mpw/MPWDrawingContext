@@ -247,8 +247,8 @@ reversePointNumberArithmetic( reverseSubPoint )
 
 +(void)testPointArithmetic
 {
-	id point1 = [self pointWithX:20 y:30];
-	id point2 = [self pointWithX:4 y:3];
+	MPWPoint* point1 = [self pointWithX:20 y:30];
+	MPWPoint* point2 = [self pointWithX:4 y:3];
 	id mulResult,addResult,subResult,divResult;
 	
 	mulResult = [point1 mul:point2];
@@ -267,9 +267,9 @@ reversePointNumberArithmetic( reverseSubPoint )
 
 +(void)testPointNumberArithmetic
 {
-	id point1 = [self pointWithX:20 y:30];
-    id number = [NSNumber numberWithInt:2];
-	id mulResult,addResult,subResult,divResult;
+	MPWPoint* point1 = [self pointWithX:20 y:30];
+    NSNumber* number = [NSNumber numberWithInt:2];
+	MPWPoint* mulResult,addResult,subResult,divResult;
  
 	mulResult = [point1 mul:number];
 	divResult = [point1 div:number];
@@ -287,16 +287,16 @@ reversePointNumberArithmetic( reverseSubPoint )
 
 +(void)testDistance
 {
-	id point1 = [self pointWithX:20 y:30];
-	id point2 = [self pointWithX:4 y:3];
+	MPWPoint* point1 = [self pointWithX:20 y:30];
+	MPWPoint* point2 = [self pointWithX:4 y:3];
     INTEXPECT((int)([point1 distance:point2]*10000), 313847, @"distance point1 <-> point2 * 1000");
     FLOATEXPECT([point1 distance:point1], 0.0, @"point1 point2")
 }
 
 +(void)testGetReals
 {
-	id point1 = [self pointWithX:20 y:30];
-	id point2 = [self pointWithX:4 y:3];
+	MPWPoint* point1 = [self pointWithX:20 y:30];
+	MPWPoint* point2 = [self pointWithX:4 y:3];
     float reals[2];
     [point1  getReals:reals length:2];
     FLOATEXPECT(reals[0], 20.0, @"got x into real[0]");
@@ -309,13 +309,13 @@ reversePointNumberArithmetic( reverseSubPoint )
 
 +(void)testCount
 {
-	id point1 = [self pointWithX:20 y:30];
+	MPWPoint* point1 = [self pointWithX:20 y:30];
     INTEXPECT([point1 count], 2, @"always 2");
 }
 
 +(void)testPointValue
 {
-	id point1 = [self pointWithX:20 y:30];
+	MPWPoint* point1 = [self pointWithX:20 y:30];
     NSPoint theNSPoint=[point1 pointValue];
     FLOATEXPECTTOLERANCE(theNSPoint.x, 20, 0.001, @"x");
     FLOATEXPECTTOLERANCE(theNSPoint.y, 30, 0.001, @"y");

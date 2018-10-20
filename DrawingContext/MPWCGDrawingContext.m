@@ -103,13 +103,13 @@ objectAccessor(NSMutableParagraphStyle, paragraphStyle, setParagraphStyle)
 
 -setParagraphSpacing:(float)newSpacing
 {
-    [[self paragraphStyle] setParagraphSpacing:newSpacing];
+    [(NSMutableParagraphStyle*)[self paragraphStyle] setParagraphSpacing:newSpacing];
     return self;
 }
 
 -setParagraphSpacingBefore:(float)newSpacing
 {
-    [[self paragraphStyle] setParagraphSpacingBefore:newSpacing];
+    [(NSMutableParagraphStyle*)[self paragraphStyle] setParagraphSpacingBefore:newSpacing];
     return self;
 }
 
@@ -185,7 +185,7 @@ objectAccessor(NSMutableParagraphStyle, paragraphStyle, setParagraphStyle)
 
 -(BOOL)object:inArray toCGFLoats:(CGFloat*)cgArray maxCount:(int)maxCount
 {
-    int arrayLength = [(NSArray*)inArray count];
+    long arrayLength = [(NSArray*)inArray count];
     arrayLength=MIN(arrayLength,maxCount);
     float floatArray[arrayLength];
     BOOL didConvert = [self object:inArray toFloats:(float *)floatArray maxCount:arrayLength];
@@ -267,6 +267,7 @@ static inline NSArray* asCGColorRefs( NSArray *colors ) {
     }
     return newColors;
 }
+
 
 -setFillColor:aColor
 {
@@ -1096,7 +1097,7 @@ void ColoredPatternCallback(void *info, CGContextRef context)
 +(NSBitmapImageRep*)bitmapForImageNamed:(NSString*)name
 {
     NSString *path=[[NSBundle bundleForClass:self] pathForImageResource:name];
-    return [NSBitmapImageRep imageRepWithContentsOfFile:path];
+    return (NSBitmapImageRep*)[NSBitmapImageRep imageRepWithContentsOfFile:path];
 }
 
 +(void)testBasicShapesGetRendered

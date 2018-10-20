@@ -13,7 +13,7 @@
 
 //--- helper methods that are used in subclasses
 
--(int)object:inArray toFloats:(float *)floatArray maxCount:(int)maxCount;
+-(long)object:inArray toFloats:(float *)floatArray maxCount:(long)maxCount;
 -(NSAttributedString*)attributedStringFromString:(NSAttributedString*)someText;
 
 @end
