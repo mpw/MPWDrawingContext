@@ -47,7 +47,7 @@
     [block drawOnContext:aContext];
 }
 
-DEALLOC(
+ARCDEALLOC(
         RELEASE(block);
 )
 
