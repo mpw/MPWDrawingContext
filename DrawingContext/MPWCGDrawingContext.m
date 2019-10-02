@@ -1086,7 +1086,7 @@ void ColoredPatternCallback(void *info, CGContextRef context)
 #if !TARGET_OS_IPHONE
 
 
-#if 1
+#if 0
 #import "EGOSTesting.h"
 
 

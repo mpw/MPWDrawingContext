@@ -31,7 +31,6 @@
 		1FB439E51B5D4C6400EF9026 /* MPWCGPathCreationContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB439E31B5D4C6400EF9026 /* MPWCGPathCreationContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1FB439E61B5D4C6400EF9026 /* MPWCGPathCreationContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FB439E41B5D4C6400EF9026 /* MPWCGPathCreationContext.m */; };
 		1FB439E91B5D513800EF9026 /* EGOSTesting.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FB439E71B5D513800EF9026 /* EGOSTesting.h */; };
-		1FB439EA1B5D513800EF9026 /* EGOSTesting.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FB439E81B5D513800EF9026 /* EGOSTesting.m */; };
 		1FC4B63E1C258C23001190C7 /* basic-shape-rendering.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FC4B63D1C258C23001190C7 /* basic-shape-rendering.png */; };
 		1FC4B6401C2593AA001190C7 /* simple-color-creation.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FC4B63F1C2593AA001190C7 /* simple-color-creation.png */; };
 /* End PBXBuildFile section */
@@ -270,7 +269,7 @@
 		1FB439AA1B5D47E200EF9026 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0930;
+				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = metaobject;
 				TargetAttributes = {
 					1F702DEE1B60F082001CD2B5 = {
@@ -286,10 +285,11 @@
 			};
 			buildConfigurationList = 1FB439AD1B5D47E200EF9026 /* Build configuration list for PBXProject "DrawingContext" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = 1FB439A91B5D47E200EF9026;
 			productRefGroup = 1FB439B41B5D47E200EF9026 /* Products */;
@@ -362,7 +362,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				1FB439D71B5D487D00EF9026 /* MPWAbstractCGContext.m in Sources */,
-				1FB439EA1B5D513800EF9026 /* EGOSTesting.m in Sources */,
 				1FB439E61B5D4C6400EF9026 /* MPWCGPathCreationContext.m in Sources */,
 				1FB439D91B5D487D00EF9026 /* MPWCGDrawingContext.m in Sources */,
 			);
@@ -440,6 +439,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -495,6 +495,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -607,6 +608,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
