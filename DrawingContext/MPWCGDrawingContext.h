@@ -68,12 +68,16 @@
     float scale;
 }
 
+-initBitmapContextWithSize:(NSSize)size colorSpace:(CGColorSpaceRef)colorspace scale:(float)scaleFactor alpha:(BOOL)alpha;
 -initBitmapContextWithSize:(NSSize)size colorSpace:(CGColorSpaceRef)colorspace scale:(float)scale;
 -initBitmapContextWithSize:(NSSize)size colorSpace:(CGColorSpaceRef)colorspace;
 
 
++rgbaBitmapContext:(NSSize)size scale:(float)scale;
 +rgbBitmapContext:(NSSize)size scale:(float)scale;
 +rgbBitmapContext:(NSSize)size;
++rgbaBitmapContext:(NSSize)size;
+
 +cmykBitmapContext:(NSSize)size;
 
 -image;

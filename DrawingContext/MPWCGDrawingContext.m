@@ -936,11 +936,13 @@ void ColoredPatternCallback(void *info, CGContextRef context)
 
 @implementation MPWCGBitmapContext
 
--initBitmapContextWithSize:(NSSize)size colorSpace:(CGColorSpaceRef)colorspace scale:(float)scaleFactor
+-initBitmapContextWithSize:(NSSize)size colorSpace:(CGColorSpaceRef)colorspace scale:(float)scaleFactor alpha:(BOOL)alpha
 {
-//    CGContextRef c=CGBitmapContextCreate(NULL, size.width, size.height, 8, 0, colorspace,
-//                                         (CGColorSpaceGetNumberOfComponents(colorspace) == 4 ? kCGImageAlphaNone : kCGImageAlphaPremultipliedLast)  | kCGBitmapByteOrderDefault );
-    CGContextRef c=CGBitmapContextCreate(NULL, size.width * scaleFactor, size.height*scaleFactor, 8, 0, colorspace,kCGImageAlphaNoneSkipFirst  | kCGBitmapByteOrderDefault );
+    //    CGContextRef c=CGBitmapContextCreate(NULL, size.width, size.height, 8, 0, colorspace,
+    //                                         (CGColorSpaceGetNumberOfComponents(colorspace) == 4 ? kCGImageAlphaNone : kCGImageAlphaPremultipliedLast)  | kCGBitmapByteOrderDefault );
+    int colorSpaceDescriptor = alpha ? kCGImageAlphaPremultipliedFirst : kCGImageAlphaNoneSkipFirst;
+
+    CGContextRef c=CGBitmapContextCreate(NULL, size.width * scaleFactor, size.height*scaleFactor, 8, 0, colorspace,colorSpaceDescriptor  | kCGBitmapByteOrderDefault );
     if ( !c ) {
         [self release];
         return nil;
@@ -952,8 +954,15 @@ void ColoredPatternCallback(void *info, CGContextRef context)
     }
     CGContextRelease(c);
     return new;
-    
+
 }
+
+
+-initBitmapContextWithSize:(NSSize)size colorSpace:(CGColorSpaceRef)colorspace scale:(float)scaleFactor
+{
+    return [self initBitmapContextWithSize:size colorSpace:colorspace scale:scaleFactor alpha:NO];
+}
+
 
 -initBitmapContextWithSize:(NSSize)size colorSpace:(CGColorSpaceRef)colorspace
 {
@@ -965,10 +974,20 @@ void ColoredPatternCallback(void *info, CGContextRef context)
     return [[[self alloc] initBitmapContextWithSize:size colorSpace:CGColorSpaceCreateDeviceRGB() scale:scale] autorelease];
 }
 
++rgbaBitmapContext:(NSSize)size scale:(float)scale
+{
+    return [[[self alloc] initBitmapContextWithSize:size colorSpace:CGColorSpaceCreateDeviceRGB() scale:scale alpha:YES] autorelease];
+}
+
 
 +rgbBitmapContext:(NSSize)size
 {
     return [self rgbBitmapContext:size scale:1];
+}
+
++rgbaBitmapContext:(NSSize)size
+{
+    return [self rgbaBitmapContext:size scale:1];
 }
 
 
