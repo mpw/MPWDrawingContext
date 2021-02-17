@@ -12,6 +12,7 @@
    An object level point abstraction, primarily for use of points with WebScript.
 "*/
 
+
 -(NSSize)asSize
 {
     NSPoint p=self.point;
