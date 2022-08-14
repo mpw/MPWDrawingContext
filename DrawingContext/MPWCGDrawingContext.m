@@ -53,7 +53,7 @@
 scalarAccessor( CGContextRef , context ,_setContext )
 idAccessor(currentFont, setCurrentFont)
 floatAccessor(fontSize, _setFontSize)
-objectAccessor(NSMutableParagraphStyle, paragraphStyle, setParagraphStyle)
+objectAccessor(NSMutableParagraphStyle*, paragraphStyle, setParagraphStyle)
 
 -(void)setContext:(CGContextRef)newVar
 {

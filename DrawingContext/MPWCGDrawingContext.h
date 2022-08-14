@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 #import "PhoneGeometry.h"
 #import "MPWAbstractCGContext.h"
+#import <CoreGraphics/CoreGraphics.h>
 
 @class NSMutableParagraphStyle;
 
