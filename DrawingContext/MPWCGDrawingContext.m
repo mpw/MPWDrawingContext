@@ -71,7 +71,7 @@ objectAccessor(NSMutableParagraphStyle*, paragraphStyle, setParagraphStyle)
 #if TARGET_OS_IPHONE
 	return UIGraphicsGetCurrentContext();
 #else
-	return [[NSGraphicsContext currentContext] graphicsPort];
+	return [[NSGraphicsContext currentContext] CGContext];
 #endif
 }
 
@@ -939,8 +939,11 @@ void ColoredPatternCallback(void *info, CGContextRef context)
 -initBitmapContextWithSize:(NSSize)size colorSpace:(CGColorSpaceRef)colorspace scale:(float)scaleFactor alpha:(BOOL)alpha
 {
     //    CGContextRef c=CGBitmapContextCreate(NULL, size.width, size.height, 8, 0, colorspace,
-    //                                         (CGColorSpaceGetNumberOfComponents(colorspace) == 4 ? kCGImageAlphaNone : kCGImageAlphaPremultipliedLast)  | kCGBitmapByteOrderDefault );
-    int colorSpaceDescriptor = alpha ? kCGImageAlphaPremultipliedFirst : kCGImageAlphaNoneSkipFirst;
+    //
+    long numComponents = CGColorSpaceGetNumberOfComponents(colorspace);
+    
+//    (CGColorSpaceGetNumberOfComponents(colorspace) == 4 ? kCGImageAlphaNone : kCGImageAlphaPremultipliedLast)  | kCGBitmapByteOrderDefault );
+    int colorSpaceDescriptor = alpha ? kCGImageAlphaPremultipliedFirst : (numComponents > 1 ? kCGImageAlphaNoneSkipFirst : kCGImageAlphaNone);
 
     CGContextRef c=CGBitmapContextCreate(NULL, size.width * scaleFactor, size.height*scaleFactor, 8, 0, colorspace,colorSpaceDescriptor  | kCGBitmapByteOrderDefault );
     if ( !c ) {
@@ -968,6 +971,12 @@ void ColoredPatternCallback(void *info, CGContextRef context)
 {
     return [self initBitmapContextWithSize:size colorSpace:colorspace scale:1];
 }
+
++grayBitmapContext:(NSSize)size scale:(float)scale
+{
+    return [[[self alloc] initBitmapContextWithSize:size colorSpace:CGColorSpaceCreateDeviceGray() scale:scale] autorelease];
+}
+
 
 +rgbBitmapContext:(NSSize)size scale:(float)scale
 {
@@ -1076,18 +1085,18 @@ void ColoredPatternCallback(void *info, CGContextRef context)
     for (long i=0; i<elementCount; i++) {
         NSPoint p[10];
         switch ( [self elementAtIndex:i associatedPoints:p]) {
-            case NSMoveToBezierPathElement:
+            case NSBezierPathElementMoveTo:
                 [context moveto:p[0].x :p[0].y];
                 break;
-            case NSLineToBezierPathElement:
+            case NSBezierPathElementLineTo:
                 [context lineto:p[0].x :p[0].y];
                 break;
                 
-            case NSCurveToBezierPathElement:
+            case NSBezierPathElementCurveTo:
                 [context curveto:p[0].x :p[0].y :p[1].x :p[1].y :p[2].x :p[2].y];
                 break;
                 
-            case NSClosePathBezierPathElement:
+            case NSBezierPathElementClosePath:
                 [context closepath];
                 break;
                 

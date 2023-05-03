@@ -78,6 +78,7 @@
 +rgbBitmapContext:(NSSize)size scale:(float)scale;
 +rgbBitmapContext:(NSSize)size;
 +rgbaBitmapContext:(NSSize)size;
++grayBitmapContext:(NSSize)size scale:(float)scale;
 
 +cmykBitmapContext:(NSSize)size;
 
